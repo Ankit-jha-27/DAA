@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 100
+
+int top = -1;
+int stack[MAX];
+
+void push(int node) {
+    if (top == MAX - 1) {
+        return; 
+    }
+    else{
+        stack[++top] = node; 
+    }
+}
+
+int pop() {
+    if (top == -1) {
+        return -1;  
+    }
+    return stack[top--];  
+}
+
+void dfs(int graph[MAX][MAX],int n,int s){
+
+    int visited[MAX] = {0};
+    push(s);
+    visited[s] = 1;
+    printf("DFS TRAVERSAL: ");
+
+    while(top != -1){
+        int node = pop();
+        
+            printf("%d->",node);
+            for (int i = 0; i < n; i++) {
+                if (graph[node][i] == 1 && !visited[i]) {
+                    push(i);
+                     visited[i] = 1;
+            
+
+                }
+
+            }
+    }
+
+}
+int main(){
+      int graph[MAX][MAX] = {0};
+    int n;
+    int s;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+    printf("Enter adjacency matrix: \n");
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+    printf("Enter Start Vertex: ");
+    scanf("%d", &s);
+    dfs(graph, n, s);
+    return 0;
+}
