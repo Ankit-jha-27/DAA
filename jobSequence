@@ -1,0 +1,68 @@
+#include <stdio.h>
+
+#define MAX 100
+
+typedef struct {
+    char id;
+    int deadline;
+    int profit;
+} Job;
+
+void sortJobsByProfit(Job jobs[], int n) {
+    Job temp;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (jobs[j].profit < jobs[j + 1].profit) {
+                temp = jobs[j];
+                jobs[j] = jobs[j + 1];
+                jobs[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int min(int a, int b) {
+    return (a < b) ? a : b;
+}
+
+int main() {
+    int n;
+    Job jobs[MAX];
+    int slot[MAX];
+    char result[MAX];
+    int total_profit = 0;
+
+    printf("Enter number of jobs: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter Job ID, Deadline, Profit for job %d: ", i + 1);
+        scanf(" %c %d %d", &jobs[i].id, &jobs[i].deadline, &jobs[i].profit);
+    }
+
+    sortJobsByProfit(jobs, n);
+
+    for (int i = 0; i < n; i++)
+        slot[i] = 0;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = min(n, jobs[i].deadline) - 1; j >= 0; j--) {
+            if (!slot[j]) {
+                slot[j] = 1;
+                result[j] = jobs[i].id;
+                total_profit += jobs[i].profit;
+                break;
+            }
+        }
+    }
+
+    printf("Selected Jobs: ");
+    for (int i = 0; i < n; i++) {
+        if (slot[i])
+            printf("%c ", result[i]);
+    }
+
+    printf("\nTotal Profit: %d\n", total_profit);
+
+    return 0;
+}
